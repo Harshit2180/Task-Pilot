@@ -5,6 +5,7 @@ import path from "path";
 import connectDB from "./database/db.js";
 import authRoute from "./routes/auth.route.js"
 import userRoute from "./routes/user.route.js"
+import taskRoutes from "./routes/task.route.js"
 import cookieParser from "cookie-parser";
 
 dotenv.config({ quiet: true });
@@ -26,6 +27,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
+app.use("/api/tasks", taskRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
