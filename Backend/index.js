@@ -13,6 +13,8 @@ dotenv.config({ quiet: true });
 
 connectDB()
 
+const _dirname = path.resolve();
+
 const app = express();
 
 app.use(express.json());
@@ -30,6 +32,8 @@ app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes)
+
+app.use("/uploads", express.static(path.join(_dirname, "uploads")))
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
