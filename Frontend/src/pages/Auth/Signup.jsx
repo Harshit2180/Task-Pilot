@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { createContext } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout'
 import { useState } from 'react'
 import { validateEmail } from '../../utils/helper';
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 import Input from '../../components/Inputs/Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import { UserContext } from '../../context/userContext';
+import uploadImage from '../../utils/uploadImage';
 
 const Signup = () => {
 
@@ -15,10 +19,15 @@ const Signup = () => {
     const [adminInviteToken, setAdminInviteToken] = useState('');
     const [error, setError] = useState(null);
 
+    const { updateUser } = createContext(UserContext)
+    const navigate = useNavigate()
+
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        if (!fullname) {
+        let profileImageUrl = ''
+
+        if (!fullName) {
             setError("Please enter full name");
             return;
         }
@@ -34,6 +43,42 @@ const Signup = () => {
         }
 
         setError("")
+
+        try {
+
+            if (profilePic) {
+                const imgUploadRes = await uploadImage(profilePic);
+                profileImageUrl = imgUploadRes.imageUrl || ""
+            }
+            const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+                name: fullName,
+                email,
+                password,
+                profileImageUrl,
+                adminInviteToken
+            })
+
+            const { token, role } = response.data;
+
+            if (token) {
+                localStorage.setItem("token", token);
+                updateUser(response.data)
+                if (role === "admin") {
+                    navigate("/admin/dashboard")
+                }
+                else {
+                    navigate("/user/dashboard")
+                }
+            }
+
+        } catch (error) {
+            if (error.response && error.response.data.message) {
+                setError(error.response.data.message)
+            }
+            else {
+                setError("Something wrong. Please try again.")
+            }
+        }
     }
 
     return (
@@ -48,7 +93,7 @@ const Signup = () => {
                         <Input value={fullName} onChange={({ target }) => setFullName(target.value)} label="Full Name" placeholder="Full Name" type="text" />
                         <Input value={email} onChange={({ target }) => setEmail(target.value)} label="Email Address" placeholder="Email" type="text" />
                         <Input value={password} onChange={({ target }) => setPassword(target.value)} label="Password" placeholder="Min 8 Characters" type="password" />
-                        <Input value={password} onChange={({ target }) => setPassword(target.value)} label="Admin Invite Token" placeholder="6 Digit Code" type="text" />
+                        <Input value={adminInviteToken} onChange={({ target }) => setAdminInviteToken(target.value)} label="Admin Invite Token" placeholder="6 Digit Code" type="text" />
                     </div>
                     {
                         error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>

@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './pages/Auth/Login'
 import Signup from './pages/Auth/Signup'
 import MainLayout from './components/layouts/MainLayout'
+import UserProvider from './context/userContext'
 
 function App() {
 
@@ -26,7 +27,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={appRouter} />
+      <UserProvider>
+        <RouterProvider router={appRouter} />
+      </UserProvider>
     </>
   )
 }
