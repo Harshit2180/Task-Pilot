@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
 
-    const { updateUser } = createContext(UserContext)
+    const { updateUser } = useContext(UserContext)
     const navigate = useNavigate()
 
     const handleLogin = async (e) => {
@@ -52,6 +52,7 @@ const Login = () => {
             }
 
         } catch (error) {
+            console.log("Login Error:", error);
             if (error.response && error.response.data.message) {
                 setError(error.response.data.message)
             }

@@ -62,7 +62,7 @@ const ManageTasks = () => {
 
         } catch (error) {
             console.error("Error downloading task details:", error)
-            toast.error("Failed to download task details. Please try again.")
+            // toast.error("Failed to download task details. Please try again.")
         }
     }
 

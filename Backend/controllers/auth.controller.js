@@ -4,36 +4,40 @@ import { generateToken } from "../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, profileImageUrl, adminInviteToken } = req.body;
 
-        if (!name || !email || !password || !role) {
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required"
-            })
-        }
-
-        const user = await User.findOne({ email });
-        if (user) {
+        const userExists = await User.findOne({ email });
+        if (userExists) {
             return res.status(400).json({
                 success: false,
                 message: "User already exists"
             })
         }
 
+        let role = "member"
+        if (adminInviteToken && adminInviteToken == process.env.ADMIN_INVITE_TOKEN) {
+            role = "admin"
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create({
+        const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role
+            role,
+            profileImageUrl
         })
 
-        return res.status(201).json({
-            success: true,
-            message: "Account created successfully"
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            profileImageUrl: user.profileImageUrl,
+            token: generateToken(user._id)
         })
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -45,13 +49,7 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        const { email, password, role } = req.body;
-        if (!email || !password || !role) {
-            return res.status(400).json({
-                success: false,
-                message: "Something is missing"
-            })
-        }
+        const { email, password } = req.body;
 
         const user = await User.findOne({ email });
         if (!user) {
@@ -69,21 +67,21 @@ export const loginUser = async (req, res) => {
             })
         }
 
-        if (role != user.role) {
-            return res.status(400).json({
-                message: "Account doesn't exist with this role",
-                success: false
-            })
-        }
-
-        generateToken(res, user, `Welcome back ${user.name}!`)
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            profileImageUrl: user.profileImageUrl,
+            token: generateToken(user._id)
+        })
 
 
     } catch (error) {
         console.log(error)
         return res.status(500).json({
             success: false,
-            message: "Failed to register"
+            message: "Failed to login"
         })
     }
 }
@@ -106,8 +104,7 @@ export const logout = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
     try {
-        const userId = req.id;
-        const user = await User.findById(userId).select("-password");
+        const user = await User.findById(req.user.id).select("-password");
 
         if (!user) {
             return res.status(404).json({
@@ -118,23 +115,21 @@ export const getUserProfile = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            user
+            ...user._doc
         })
 
     } catch (error) {
         console.log(error)
         return res.status(500).json({
             success: false,
-            message: "Failed to register"
+            message: "Failed to fetch profile"
         })
     }
 }
 
 export const updateUserProfile = async (req, res) => {
     try {
-        const userId = req.id;
-        const { name, email, password } = req.body;
-        const user = await User.findById(userId);
+        const user = await User.findById(req.user.id);
 
         if (!user) {
             return res.status(404).json({
@@ -143,22 +138,21 @@ export const updateUserProfile = async (req, res) => {
             })
         }
 
-        const updatedData = {};
+        user.name = req.body.name || user.name
+        user.email = req.body.email || user.email
 
-        if (name) updatedData.name = name;
-        if (email) updatedData.email = email;
-
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updatedData.password = hashedPassword;
+        if (req.body.password) {
+            user.password = await bcrypt.hash(password, 10);
         }
 
-        const updatedUser = await User.findByIdAndUpdate(user._id, updatedData, { new: true, runValidators: true }).select("-password");
+        const updatedUser = await user.save()
 
-        return res.status(200).json({
-            message: "Profile updated successfully",
-            user: updatedUser,
-            success: true
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            token: generateToken(updatedUser._id)
         })
 
     } catch (error) {

@@ -44,7 +44,7 @@ export const getTasks = async (req, res) => {
 
         const inProgressTasks = await Task.countDocuments({
             ...filter,
-            status: "In Prgress",
+            status: "In Progress",
             ...(req.user.role !== "adimin" && { assignedTo: req.user._id })
         })
 
@@ -411,7 +411,7 @@ export const getUserDashboardData = async (req, res) => {
         const taskStatuses = ["Pending", "In Progress", "Completed"]
         const taskDistributionRaw = await Task.aggregate([
             { $match: { assignedTo: userId } },
-            { $group: { _id: "status", count: { $sum: 1 } } }
+            { $group: { _id: "$status", count: { $sum: 1 } } }
         ])
 
         const taskDistribution = taskStatuses.reduce((acc, status) => {
@@ -425,7 +425,7 @@ export const getUserDashboardData = async (req, res) => {
         const taskPriorities = ["Low", "Medium", "High"]
         const taskPriorityLevelsRaw = await Task.aggregate([
             { $match: { assignedTo: userId } },
-            { $group: { _id: "priority", count: { $sum: 1 } } }
+            { $group: { _id: "$priority", count: { $sum: 1 } } }
         ])
 
         const taskPriorityLevels = taskPriorities.reduce((acc, priority) => {

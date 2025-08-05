@@ -3,7 +3,7 @@ import DashboardLayout from '../../components/layouts/DashboardLayout'
 import { PRIORITY_DATA } from '../../utils/data'
 import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
-import toast from 'react-hot-toast '
+// import toast from 'react-hot-toast '
 import { useLocation, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import { LuTrash2 } from 'react-icons/lu'
@@ -68,7 +68,7 @@ const CreateTask = () => {
                 todoChecklist: todolist
             })
 
-            toast.success("Task Created Successfully")
+            // toast.success("Task Created Successfully")
 
             clearData()
 
@@ -98,7 +98,7 @@ const CreateTask = () => {
                 todoChecklist: todolist
             })
 
-            toast.success("Task Updated Successfully")
+            // toast.success("Task Updated Successfully")
         } catch (error) {
             console.error("Error creating task:", error)
         } finally {
@@ -172,7 +172,7 @@ const CreateTask = () => {
             await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId))
 
             setOpenDeleteAlert(false)
-            toast.success("Task deleted successully")
+            // toast.success("Task deleted successully")
             navigate(`/admin/tasks`)
 
         } catch (error) {

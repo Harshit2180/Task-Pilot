@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'
+import React, { useContext } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout'
 import { useState } from 'react'
 import { validateEmail } from '../../utils/helper';
@@ -19,7 +19,7 @@ const Signup = () => {
     const [adminInviteToken, setAdminInviteToken] = useState('');
     const [error, setError] = useState(null);
 
-    const { updateUser } = createContext(UserContext)
+    const { updateUser } = useContext(UserContext)
     const navigate = useNavigate()
 
     const handleSignup = async (e) => {

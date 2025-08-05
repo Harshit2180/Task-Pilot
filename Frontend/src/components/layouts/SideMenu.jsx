@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../context/userContext'
 import { useNavigate } from 'react-router-dom';
 import { SIDE_MENU_DATA, SIDE_MENU_USER_DATA } from '../../utils/data';
@@ -49,7 +49,7 @@ const SideMenu = ({ activeMenu }) => {
             {
                 sideMenuData.map((item, index) => (
                     <button key={`menu_${index}`} className={`w-full flex items-center gap-4 text-[15px] ${activeMenu == item.label ? "text-[#1368EC] bg-linear-to-r from-blue-50/40 to-blue-100/50 border-r-3" : ""} py-3 mb-3 px-6 cursor-pointer`} onClick={() => handleClick(item.path)} >
-                        <item.icon className='text-xl' />
+                        <item.Icon className='text-xl' />
                         {item.label}
                     </button>
                 ))

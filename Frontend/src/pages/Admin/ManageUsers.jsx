@@ -40,7 +40,7 @@ const ManageUsers = () => {
 
         } catch (error) {
             console.error("Error downloading user details:", error)
-            toast.error("Failed to download user details. Please try again.")
+            // toast.error("Failed to download user details. Please try again.")
         }
     }
 
