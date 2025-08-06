@@ -6,13 +6,13 @@ const CustomBarChart = ({ data }) => {
     const getBarColor = (entry) => {
         switch (entry?.priority) {
             case 'Low':
-                return '#FE9900'
+                return '#00BC7D'
 
             case 'Medium':
-                return '#FF1F57'
+                return '#FE9900'
 
             case 'High':
-                return '#00BC7D'
+                return '#FF1F57'
         }
     }
 
