@@ -5,7 +5,7 @@ import { createTask, deleteTask, getDashboardData, getTaskById, getTasks, getUse
 const router = express.Router();
 
 router.route("/dashboard-data").get(isAuthenticated, getDashboardData);
-router.route("user-dashboard-data").get(isAuthenticated, getUserDashboardData);
+router.route("/user-dashboard-data").get(isAuthenticated, getUserDashboardData);
 router.route("/").get(isAuthenticated, getTasks);
 router.route("/:id").get(isAuthenticated, getTaskById);
 router.route("/").post(isAuthenticated, adminOnly, createTask);

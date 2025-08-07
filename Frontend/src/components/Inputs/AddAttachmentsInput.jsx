@@ -9,10 +9,11 @@ const AddAttachmentsInput = ({ attachments, setAttachments }) => {
     const handleAddOption = () => {
         if (option.trim()) {
             setAttachments([...attachments, option.trim()])
+            setOption("")
         }
     }
 
-    const handleDeleteOption = () => {
+    const handleDeleteOption = (index) => {
         const updatedArr = attachments.filter((_, idx) => idx !== index)
         setAttachments(updatedArr)
     }

@@ -147,7 +147,7 @@ const CreateTask = () => {
 
             const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(taskId))
             if (response.data) {
-                const taskInfo = response.data
+                const taskInfo = response.data.task
                 setCurrentTask(taskInfo)
 
                 setTaskData((prevState) => ({
@@ -237,7 +237,7 @@ const CreateTask = () => {
                             )
                         }
                         <div className='flex justify-end mt-7'>
-                            <button className='add-btn' onClick={handleSubmit} disabled={loading}>{taskId ? "UPDAte TASK" : "CREATE TASK"}</button>
+                            <button className='add-btn' onClick={handleSubmit} disabled={loading}>{taskId ? "UPDATE TASK" : "CREATE TASK"}</button>
                         </div>
                     </div>
                 </div>

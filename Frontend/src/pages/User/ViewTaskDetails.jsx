@@ -12,7 +12,7 @@ const ViewTaskDetails = () => {
     const { id } = useParams()
     const [task, setTask] = useState(null)
 
-    const getStatusTagColor = () => {
+    const getStatusTagColor = (status) => {
         switch (status) {
             case "In Progress":
                 return "text-cyan-500 bg-cyan-50 boder border-cyan-500/10";
@@ -29,9 +29,9 @@ const ViewTaskDetails = () => {
         try {
 
             const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(id))
-            if (response.data) {
+            if (response.data?.task) {
                 const taskInfo = response.data
-                setTask(taskInfo)
+                setTask(response.data.task)
             }
 
         } catch (error) {
@@ -39,7 +39,7 @@ const ViewTaskDetails = () => {
         }
     }
 
-    const updateTodoChecklist = async () => {
+    const updateTodoChecklist = async (index) => {
         const todoChecklist = [...task?.todoChecklist]
         const taskId = id
 
@@ -113,7 +113,7 @@ const ViewTaskDetails = () => {
                                     }
                                 </div>
                                 {
-                                    task?.attachments?.lenght > 0 && (
+                                    task?.attachments?.length > 0 && (
                                         <div className='mt-2'>
                                             <label className='text-xs font-medium text-slate-500'>Attachments</label>
                                             {
@@ -147,7 +147,7 @@ const InfoBox = ({ label, value }) => {
 const TodoCheckList = ({ text, isChecked, onChange }) => {
     return (
         <div className='flex items-center gap-3 p-3'>
-            <input type='checkbox' checked={isChecked} onChange={onchange} className='w-4 h-4 text-[#1368EC] bg-gray-100 border-gray-300 rounded-sm outline-none cursor-pointer' />
+            <input type='checkbox' checked={isChecked} onChange={onChange} className='w-4 h-4 text-[#1368EC] bg-gray-100 border-gray-300 rounded-sm outline-none cursor-pointer' />
             <p className='text-[13px] text-gray-800'>{text}</p>
         </div>
     )

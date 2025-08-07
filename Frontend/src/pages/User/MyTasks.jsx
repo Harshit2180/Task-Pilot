@@ -23,7 +23,7 @@ const MyTasks = () => {
                 }
             })
 
-            setAllTasks(response.data?.tasks?.lenght > 0 ? response.data.tasks : [])
+            setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : [])
 
             const statusSummary = response.data?.statusSummary || {}
 

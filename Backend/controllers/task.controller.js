@@ -39,19 +39,19 @@ export const getTasks = async (req, res) => {
         const pendingTasks = await Task.countDocuments({
             ...filter,
             status: "Pending",
-            ...(req.user.role !== "adimin" && { assignedTo: req.user._id })
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id })
         })
 
         const inProgressTasks = await Task.countDocuments({
             ...filter,
             status: "In Progress",
-            ...(req.user.role !== "adimin" && { assignedTo: req.user._id })
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id })
         })
 
         const completedTasks = await Task.countDocuments({
             ...filter,
             status: "Completed",
-            ...(req.user.role !== "adimin" && { assignedTo: req.user._id })
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id })
         })
 
         return res.status(201).json({
@@ -295,7 +295,7 @@ export const updateTaskChecklist = async (req, res) => {
         task.progress = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0
 
         if (task.progress === 100) {
-            task.status === "Completed"
+            task.status = "Completed"
         }
         else if (task.progress > 0) {
             task.status = "In Progress"
@@ -401,6 +401,7 @@ export const getUserDashboardData = async (req, res) => {
         const userId = req.user._id;
 
         const totalTasks = await Task.countDocuments({ assignedTo: userId });
+        const pendingTasks = await Task.countDocuments({ assignedTo: userId, status: "Pending" });
         const completedTasks = await Task.countDocuments({ assignedTo: userId, status: "Completed" });
         const overdueTasks = await Task.countDocuments({
             assignedTo: userId,
