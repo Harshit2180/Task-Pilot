@@ -9,7 +9,7 @@ export const exportTasksReport = async (req, res) => {
         const tasks = await Task.find().populate("assignedTo", "name email");
 
         const workbook = new excelJS.Workbook();
-        const worksheet = new workbook.addWorksheet("Tasks Report");
+        const worksheet = workbook.addWorksheet("Tasks Report");
 
         worksheet.columns = [
             { header: "Task ID", key: "_id", width: 25 },
@@ -29,7 +29,7 @@ export const exportTasksReport = async (req, res) => {
                 description: task.description,
                 priority: task.priority,
                 status: task.status,
-                duesDate: task.dueDate.toISOString().split("T")[0],
+                dueDate: task.dueDate.toISOString().split("T")[0],
                 assignedTo: assignedTo || "Unassigned"
             })
         })
@@ -88,7 +88,7 @@ export const exportUsersReport = async (req, res) => {
         })
 
         const workbook = new excelJS.Workbook();
-        const worksheet = new workbook.addWorksheet("User Tasks Report");
+        const worksheet = workbook.addWorksheet("User Tasks Report");
 
         worksheet.columns = [
             { header: "User Name", key: "name", width: 30 },

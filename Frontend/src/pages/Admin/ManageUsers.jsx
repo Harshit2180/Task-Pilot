@@ -4,6 +4,8 @@ import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
 import { LuFileSpreadsheet } from 'react-icons/lu'
 import UserCard from '../../components/Cards/UserCard'
+import { toast } from 'react-hot-toast'
+
 
 const ManageUsers = () => {
 
@@ -13,7 +15,7 @@ const ManageUsers = () => {
         try {
 
             const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS)
-            
+
             if (Array.isArray(response.data?.users)) {
                 setAllUsers(response.data.users)
             }
@@ -41,7 +43,7 @@ const ManageUsers = () => {
 
         } catch (error) {
             console.error("Error downloading user details:", error)
-            // toast.error("Failed to download user details. Please try again.")
+            toast.error("Failed to download user details. Please try again.")
         }
     }
 
@@ -56,7 +58,7 @@ const ManageUsers = () => {
             <div className='mt-5 mb-10'>
                 <div className='flex md:flex-row md:items-center justify-between'>
                     <h2 className='text-xl md:text-xl font-medium'>Team Members</h2>
-                    <button className='flex md:flex download-btn'><LuFileSpreadsheet className='text-lg' />Download Report</button>
+                    <button className='flex md:flex download-btn' onClick={handleDownloadReport}><LuFileSpreadsheet className='text-lg' />Download Report</button>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-4'>
                     {

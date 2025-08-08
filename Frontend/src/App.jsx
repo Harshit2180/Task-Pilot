@@ -12,10 +12,11 @@ import ManageUsers from './pages/Admin/ManageUsers'
 import UserDashboard from './pages/User/UserDashboard'
 import MyTasks from './pages/User/MyTasks'
 import ViewTaskDetails from './pages/User/ViewTaskDetails'
+import { Toaster } from 'react-hot-toast'
 
 
 function App() {
-  
+
   return (
     <>
       <UserProvider>
@@ -41,6 +42,8 @@ function App() {
 
           </Routes>
         </Router>
+
+        <Toaster toastOptions={{ className: "", style: { fontSize: "13px" } }} />
       </UserProvider>
     </>
   )
