@@ -81,13 +81,11 @@ MONGO_URI = your_mongodb_connection_string
 SECRET_KEY = your_jwt_secret
 ADMIN_INVITE_TOKEN = your_6_digit_code
 PORT = 8000
+
+CLOUD_NAME = your_cloud_name
+API_KEY = your_api_key
+API_SECRET = your_api_secret
 ```
-## 🐞 Known Issues / Limitations
-
-- 📷 Signup fails when uploading a profile picture; users can successfully sign up only if no profile image is provided.
-
-> This issue is known and will be resolved in upcoming updates. Feel free to contribute or raise an issue in the repository!
-
 
 
 ## 🤝 Contributing
